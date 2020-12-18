@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+    class Gugudan extends React.Component{
+        state ={
+            firstNum : Math.ceil(Math.random()*9),
+            secondNum : Math.ceil(Math.random()*9),
+            userAnswer : '',
+            resultText: '',
+        }
+
+        submitHandler = (e) => {
+            e.preventDefault();
+
+            this.input.focus();
+            if (!this.state.userAnswer) { return; }
+            if (Number(this.state.userAnswer) === (this.state.firstNum * this.state.secondNum) ){
+                this.setState({
+                firstNum : Math.ceil(Math.random()*9),
+                secondNum : Math.ceil(Math.random()*9),
+                userAnswer : '',
+                resultText : `${this.state.firstNum} x ${this.state.secondNum} = ${this.state.userAnswer} 맞았습니다`
+                })
+            } else {
+                this.setState({
+                userAnswer : '',
+                resultText :`${this.state.firstNum} x ${this.state.secondNum} != ${this.state.userAnswer} 틀렸습니다. 다른 답을 입력해주세요`
+                })
+            }
+            
+        }
+
+        changeHandler = (e) => {
+            this.setState({
+                userAnswer: e.target.value
+            })
+        }
+
+        input;
+
+        render(){
+            return(
+                <React.Fragment>
+                    <p>{this.state.firstNum} x {this.state.secondNum} 은?</p>                        
+                    <form onSubmit={this.submitHandler}>
+                        <input ref={(i) => this.input = i } type="number" value={this.state.userAnswer} onChange={this.changeHandler}/>
+                        <button type="submit">입력</button>
+                    </form>
+                    <p> {this.state.resultText}</p>
+                </React.Fragment>
+            );
+        }
+    }
+    </script>
+    <script type="text/babel">
+    ReactDOM.render(<div><Gugudan /><Gugudan /><Gugudan /></div>, document.querySelector('#root'));
+    </script>
+</body>
+</html>
