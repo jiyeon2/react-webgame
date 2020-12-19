@@ -1,25 +1,24 @@
 {
-  "name": "2_word",
+  "name": "3_baseball",
   "version": "1.0.0",
-  "description": "- 리액트 공식문서 읽기, 공식문서에 다 적혀있음! - 웹팩",
+  "description": "- 20201219 props, map, import배울거라함",
   "main": "index.js",
   "scripts": {
     "dev": "webpack serve --env development"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
   "devDependencies": {
-    "babel-loader": "^8.2.2",
     "@babel/core": "^7.12.10",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
+    "babel-loader": "^8.2.2",
     "react-refresh": "^0.9.0",
     "webpack": "^5.11.0",
     "webpack-cli": "^4.2.0",
