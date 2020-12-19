@@ -1,0 +1,23 @@
+{
+  "name": "1_gugudan",
+  "version": "1.0.0",
+  "description": "- 리액트는 데이터(상태)에 따라 화면을 자동으로 바꿔준다. - 컴포넌트를 만들어 코드 중복을 줄일 수 있다. 생산성 향상 - HTML + js 형태의 jsx는 자바스크립트 엔진이 해석할 수 없음 -> 바벨(트랜스파일러) 필요 - jsx 에서는 반드시 닫는태그 필요, 태그가 하나인 경우 <MyComponenet / > 이렇게 써야함 - setState()는 비동기로 동작함, 이전 상태 참조할 경우 setState((prev) => {new : prev+1})",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "devDependencies": {
+    "babel-loader": "^8.2.2",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "webpack": "^5.11.0",
+    "webpack-cli": "^4.2.0"
+  }
+}

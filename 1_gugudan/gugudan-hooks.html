@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>끝말잇기</title>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+    const Gugudan = () => {
+        const [first, setFirst ] = React.useState(Math.ceil(Math.random()*9));
+        const [second, setSecond ] = React.useState(Math.ceil(Math.random()*9));
+        const [value, setValue ] = React.useState('');
+        const [result, setResult ] = React.useState('');
+        const inputRef = React.useRef(null);
+
+        const submitHandler = (e) => {
+            e.preventDefault();
+            if (Number(value) === first*second){
+                setFirst(Math.ceil(Math.random()*9));
+                setSecond(Math.ceil(Math.random()*9));
+                setValue('');
+                setResult(`${value} 맞았습니다`);
+                inputRef.current.focus();
+            } else {
+                setValue('');
+                setResult(`${value} 틀렸습니다`);
+                inputRef.current.focus();
+            }
+        }
+        const changeHandler = (e) => {
+            setValue(e.target.value);
+        }
+        return (
+            <React.Fragment>
+                <p>{first} x {second} 은?</p>                        
+                <form onSubmit={submitHandler}>
+                    <input ref={inputRef} type="number" value={value} onChange={changeHandler}/>
+                    <button type="submit">입력</button>
+                </form>
+                <p> {result}</p>
+            </React.Fragment>
+        );
+    }
+    </script>
+    <script type="text/babel">
+    ReactDOM.render(<Gugudan />, document.querySelector('#root'));
+    </script>
+</body>
+</html>

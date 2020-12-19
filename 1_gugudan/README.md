@@ -4,6 +4,7 @@
 - 컴포넌트를 만들어 코드 중복을 줄일 수 있다. 생산성 향상
 - HTML + js 형태의 jsx는 자바스크립트 엔진이 해석할 수 없음 -> 바벨(트랜스파일러) 필요
 - jsx 에서는 반드시 닫는태그 필요, 태그가 하나인 경우 <MyComponenet / > 이렇게 써야함
+- setState()는 비동기로 동작함, 이전 상태 참조할 경우 setState((prev) => {new : prev+1})
 
 - 20201217
     - React.createElement(elem, attributes, textContent) 로 리액트 컴포넌트 생성
