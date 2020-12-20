@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, { PureComponent, createRef } from "react";
 import Try from './Try-class';
 import {getNumber} from './getNumber';
 
-class Baseball extends Component {
+class Baseball extends PureComponent {
   state = {
     value: "",
     answer: getNumber(),
-    result: "이곳에 결과가 보여집니다",
+    result: "클래스 컴포넌트 이곳에 결과가 보여집니다",
     tries: [],
   };
 
@@ -38,7 +38,7 @@ class Baseball extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     const { value, answer, result, tries } = this.state;
-    this.inputRef.focus();
+    this.inputRef.current.focus();
     if (value === answer) {
       alert("정답입니다. 새 게임을 시작합니다");
       this.clearState();
@@ -65,10 +65,11 @@ class Baseball extends Component {
     });
   };
 
-  inputRef;
-  onRef = (input) => {
-    this.inputRef = input;
-  }
+  inputRef = createRef();
+
+  // onRef = (input) => {
+  //   this.inputRef = input;
+  // }
 
   render() {
     const { value, tries, result } = this.state;
@@ -81,7 +82,7 @@ class Baseball extends Component {
             maxLength={4}
             value={value}
             onChange={this.onChange}
-            ref={this.onRef}
+            ref={this.inputRef}
           />
           <button>입력</button>
         </form>
