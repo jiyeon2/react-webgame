@@ -1,18 +1,7 @@
 import React, { Component } from "react";
 import Try from './Try-class';
+import {getNumber} from './getNumber';
 
-// 4개의 랜덤한 숫자 만드는 함수
-const getNumber = () => {
-  let candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  let result = [];
-  for (let i = 0; i < 4; i++) {
-    let idx = Math.floor(Math.random() * candidates.length);
-    let num = candidates.splice(idx, 1)[0];
-    result.push(num);
-  }
-  console.log(result);
-  return result.join("");
-};
 class Baseball extends Component {
   state = {
     value: "",
@@ -49,19 +38,22 @@ class Baseball extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     const { value, answer, result, tries } = this.state;
+    this.inputRef.focus();
     if (value === answer) {
       alert("정답입니다. 새 게임을 시작합니다");
       this.clearState();
     } else {
-      if (tries.length >= 1) {
+      if (tries.length >= 10) {
         alert(`실패했습니다. 정답은  ${answer}였습니다. 새 게임을 시작합니다`);
         this.clearState();
       } else {
         const {ball, strike} = this.getScore();
-        this.setState({
-          result: `입력 : ${value}, 틀렸습니다`,
-          value: '',
-          tries: [...tries, { value, result: `${ball}볼 ${strike}스트라이크` }],
+        this.setState(({tries}) => {
+          return {
+            result: `입력 : ${value}, 틀렸습니다`,
+            value: '',
+            tries: [...tries, { value, result: `${ball}볼 ${strike}스트라이크` }],
+          }
         });
       }
     }
@@ -72,6 +64,11 @@ class Baseball extends Component {
       value: e.currentTarget.value,
     });
   };
+
+  inputRef;
+  onRef = (input) => {
+    this.inputRef = input;
+  }
 
   render() {
     const { value, tries, result } = this.state;
@@ -84,6 +81,7 @@ class Baseball extends Component {
             maxLength={4}
             value={value}
             onChange={this.onChange}
+            ref={this.onRef}
           />
           <button>입력</button>
         </form>
