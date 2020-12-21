@@ -21,6 +21,7 @@ module.exports = {
             "@babel/plugin-proposal-class-properties",
           ],
         },
+        exclude: path.join(__dirname, "node_modules"),
       },
     ],
   },
