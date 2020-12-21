@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useState, useRef, useEffect, memo} from 'react';
 
 const rspCoords ={
     rock: '0',
@@ -15,90 +15,67 @@ const computerChoice = (imgCoord) => {
     return Object.entries(rspCoords).find((v) => v[1]===imgCoord)[0];
 }
 
-const RSP = () => {
-    return ();
-}
-class RSP extends PureComponent {
-    state={
-        result: '',
-        imgCoord: rspCoords.rock,
-        score: 0
-    }
+const RSP = memo(() => {
+    const [result, setResult] = useState('');
+    const [imgCoord, setImgCoord] = useState(rspCoords.rock) ;
+    const [score, setScore] = useState(0);
+    const interval = useRef();
 
-    interval;
-    componentDidMount() {// 컴포넌트가 첫 렌더링 된 후 - 비동기 작업 할당
-        this.interval = setInterval(this.changeHand, 1000);
-    } 
-    componentWillUnmount() {// 컴포넌트가 제거되기 전
-        clearInterval(this.interval)
-    } 
+    useEffect(() => {
+        interval.current = setInterval(changeHand, 100);
+        return () => {
+            clearInterval(interval.current);
+        }
+    }, [imgCoord])
 
-    changeHand = () => {
-        const {imgCoord} = this.state; // 비동기 콜백함수 안에서 외부 함수 참조하면 값이 함수 선언 할 때로 고정되어 있음
+    const changeHand = () => {
         if (imgCoord === rspCoords.rock){
-            this.setState({
-                imgCoord: rspCoords.scissor
-            })
+            setImgCoord(rspCoords.scissor);
         } else if (imgCoord === rspCoords.scissor){
-            this.setState({
-                imgCoord: rspCoords.paper
-            })
+            setImgCoord(rspCoords.paper);
         } else if (imgCoord === rspCoords.paper){
-            this.setState({
-                imgCoord: rspCoords.rock
-            })
+            setImgCoord(rspCoords.rock);
+        }
+    }
+    const onClickBtn = (choice) => () => {
+        if (interval.current){
+            clearInterval(interval.current);
+            interval.current = null;
+    
+    
+            const myScore = scores[choice];
+            const cpuScore = scores[computerChoice(imgCoord)];
+            const diff = myScore - cpuScore;
+            if (diff === 0){
+                setResult('비겼습니다');
+            } else if ([-1,2].includes(diff)){
+                setResult('이겼습니다');
+                setScore((prev) => prev+1);
+            } else {
+                setResult('졌습니다');
+                setScore((prev) => prev-1);
+            }
+            setTimeout(() => {
+                interval.current = setInterval(changeHand, 1000);
+            },1000); 
         }
     }
 
-    onClickBtn = (choice) => () => {
-        clearInterval(this.interval);
+    return (
+        <>
+        <div id="computer" style={{
+            background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${imgCoord} 0`,
+        }}></div>
+        <div>
+            <button id="rock" className="btn" onClick={onClickBtn('rock')}>바위</button>
+            <button id="scissor" className="btn" onClick={onClickBtn('scissor')}>가위</button>
+            <button id="paper" className="btn" onClick={onClickBtn('paper')}>보</button>
+        </div>
+        <div>{result}</div>
+        <div>{score}점</div>
+        </>
+    );
+})
 
-        const {imgCoord} = this.state;
-
-        const myScore = scores[choice];
-        const cpuScore = scores[computerChoice(imgCoord)];
-        const diff = myScore - cpuScore;
-        if (diff === 0){
-            this.setState({
-                result: '비겼습니다'
-            })
-        } else if ([-1,2].includes(diff)){
-            this.setState((prev) => {
-                return {
-                    result: '이겼습니다',
-                    score : prev.score + 1
-                }
-            })
-        } else {
-            this.setState((prev) => {
-                return {
-                    result: '졌습니다',
-                    score : prev.score -1 
-                }
-            })
-        }
-        setTimeout(() => {
-            this.interval = setInterval(this.changeHand, 100);
-        },1000);
-        
-    }
-    render() {
-        const { result, score, imgCoord } = this.state;
-        return (
-            <>
-            <div id="computer" style={{
-                background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${imgCoord} 0`,
-            }}></div>
-            <div>
-                <button id="rock" className="btn" onClick={this.onClickBtn('rock')}>바위</button>
-                <button id="scissor" className="btn" onClick={this.onClickBtn('scissor')}>가위</button>
-                <button id="paper" className="btn" onClick={this.onClickBtn('paper')}>보</button>
-            </div>
-            <div>{result}</div>
-            <div>{score}점</div>
-            </>
-        );
-    }
-}
 
 export default RSP;
