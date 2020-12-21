@@ -1,4 +1,6 @@
 # 반응속도 체크 만들며 배운거
+- useRef
+- jsx 내에서 반복문, 조건문
 
 ## 20201220
 - css에서 user-select: none; 하면 문자열 드래그 방지됨. 마우스 드래그 이벤트 preventDefault()랑 같은건가?

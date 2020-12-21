@@ -1,9 +1,11 @@
 # 숫자야구 만들며 배운거
 
 ## 20201219 
-- props, map, import/require
+- props
+- jxs 내에서 반복문 map 사용
+    + 고유한 key 를 넘겨줘야함, 인덱스를 그대로 사용하지 말것(삭제나 변경시 렌더링 될때에 문제)
 
-## 2020
+## 20201220
 - 렌더링 최적화
     + React.Component, shouldComponentUpdate /React.PureComponent
     + React.memo : 자식 컴포넌트가 모두 memo로 감싸져있으면 부모도 memo로 감쌀 수 있다
