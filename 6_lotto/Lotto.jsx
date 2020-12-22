@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import Ball from './Ball';
 
 const getWinNumbers = () => {
@@ -12,73 +12,54 @@ const getWinNumbers = () => {
     const winNumbers = shuffle.slice(0,6).sort((a,b) => a-b);
     return [...winNumbers, bonusNumber];
 }
-class Lotto extends Component {
-    state ={
-        winNumbers: getWinNumbers(),
-        winBalls: [],
-        bonus: null,
-        redo: false,
-    }
 
-    timeouts = [];
+const Lotto = () => {
+    const lottoNumbers = useMemo(() => getWinNumbers(),[]);
+    const [winNumbers, setWinNumbers] = useState(lottoNumbers);
+    const [winBalls, setWinBalls] = useState([]);
+    const [bonus, setBonus] = useState(null);
+    const [redo, setRedo] = useState(false);
+    const timeouts = useRef([]);
 
-    runTimeouts = () => {
-        const {winNumbers} = this.state;
+    useEffect(() => {
         for (let i = 0; i < winNumbers.length-1; i++){
-            this.timeouts[i] = setTimeout(() => {
-                this.setState((prev) => {
-                    return {
-                        winBalls: [...prev.winBalls, winNumbers[i]]
-                    }
-                })
+            timeouts.current[i] = setTimeout(() => {
+                setWinBalls((prev) => [...prev, winNumbers[i]])
             }, (i+1)*1000)
 
-            this.timeouts[6] = setTimeout(() => {
-                this.setState({
-                    bonus: winNumbers[6],
-                    redo: true
-                });
+            timeouts.current[6] = setTimeout(() => {
+                setBonus(winNumbers[6]);
+                setRedo(true);
             }, 7000)
         }
-    }
-    componentDidMount() {
-        this.runTimeouts();
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        // redo 눌렀을 때(winballs.length === 0일 때)만 동작하도록
-        if (this.state.winBalls.length === 0){
-            this.runTimeouts();
+        return () => {
+            timeouts.current.forEach((v) => clearTimeout(v));
         }
-    }
+    }, [timeouts.current]) // [] 배열 안에는 바뀌는 값
 
-    componentWillUnmount(){
-        this.timeouts.forEach((v) => clearTimeout(v));
-    }
 
-    onClickRedo = () => {
-        this.setState({
-            winNumbers: getWinNumbers(),
-            winBalls: [],
-            bonus: null,
-            redo: false,
-        })
-        this.timeouts = [];
-    }
-    render() {
-        const { winBalls, bonus, redo} = this.state;
-        return (
-            <>
-            <div>당첨숫자</div>
-            <div id="result">
-                {winBalls.map((v) => <Ball key={v} number={v}/>)}
-            </div>
-            <div>보너스</div>
-            {bonus && <Ball number={bonus}/>}
-            {redo&& <button onClick = {this.onClickRedo}>한번더</button>}
-            </>
-        );
-    }
+    const onClickRedo = useCallback(() => {
+        console.log('useCallback');
+        console.log(winNumbers);
+        setWinNumbers(getWinNumbers());
+        setWinBalls([]);
+        setBonus(null);
+        setRedo(false);
+        timeouts.current = [];
+    },[winNumbers]); // useCallback 안에서 쓰이는 state는 배열에 넣어줘야함, 배열 안의 값이 바뀌었을 때 useCallback안의 함수가 실행됨
+
+    return (
+        <>
+        <div>당첨숫자</div>
+        <div id="result">
+            {winBalls.map((v) => <Ball key={v} number={v}/>)}
+        </div>
+        <div>보너스</div>
+        {bonus && <Ball number={bonus}/>}
+        {redo&& <button onClick = {onClickRedo}>한번더</button>}
+        </>
+    );
 }
+
 
 export default Lotto;
